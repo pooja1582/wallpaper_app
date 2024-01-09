@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallpaper_ui/first_page.dart';
 import 'package:wallpaper_ui/second_page.dart';
 import 'package:wallpaper_ui/third_page.dart';
-import 'package:wallpaper_ui/wallpaper.dart';
+
 
 void main() {
   runApp(const MyApp());
