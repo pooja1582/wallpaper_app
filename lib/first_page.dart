@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 import 'package:flutter/material.dart';
 import 'package:wallpaper_ui/second_page.dart';
 
@@ -30,6 +33,27 @@ class FirstPage extends StatefulWidget {
   State<FirstPage> createState() => _FirstPageState();
 }
 
+List<String> Custom = [];
+
+fetchwalppaer() async {
+  const Url = "https://api.pexels.com/v1/curated?per_page=15";
+
+  final response = await http.get(Uri.parse(Url), headers: {
+    "Authorization": "bwcK41gZrt7cumE6qip3wQ2vyzRKBhBr1mAdsrF8MVXe9f4eHqDYsCVh"
+  });
+  if (response.statusCode == 200) {
+    var result = jsonDecode(response.body);
+    List photos = result["photos"];
+    for (var element in photos) {
+      Map<String, dynamic> src = element["src"];
+      Custom.add(src["portrait"].toString());
+    }
+    return true;
+  } else {
+    false;
+  }
+}
+
 class _FirstPageState extends State<FirstPage> {
   @override
   Widget build(BuildContext context) {
@@ -39,7 +63,7 @@ class _FirstPageState extends State<FirstPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 80,
               ),
               Padding(
@@ -50,30 +74,31 @@ class _FirstPageState extends State<FirstPage> {
                         borderRadius: BorderRadius.circular(21),
                       ),
                       hintText: "Find Wallpaper",
-                      hintStyle: TextStyle(color: Colors.grey),
-                      suffixIcon: Icon(
+                      hintStyle: const TextStyle(color: Colors.grey),
+                      suffixIcon: const Icon(
                         Icons.search,
                         color: Colors.grey,
                       )),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               Column(
                 children: [
-                  Row(
+                  const Row(
                     children: [
                       SizedBox(
                         width: 20,
                       ),
                       Text(
                         "Best of the month",
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w600),
                       ),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   SizedBox(
@@ -96,21 +121,22 @@ class _FirstPageState extends State<FirstPage> {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
-                  Row(
+                  const Row(
                     children: [
                       SizedBox(
                         width: 20,
                       ),
                       Text(
                         "The color tone",
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w600),
                       )
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   SizedBox(
@@ -129,55 +155,57 @@ class _FirstPageState extends State<FirstPage> {
                               ),
                             ))),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
-                  Row(
+                  const Row(
                     children: [
                       SizedBox(
                         width: 20,
                       ),
                       Text(
                         "Categories",
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w600),
                       )
                     ],
                   ),
                   SizedBox(
                     height: 750,
                     child: GridView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: widget.image.length,
-
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,
-                        childAspectRatio: 16/9,
-                          mainAxisExtent: 130,
-                          mainAxisSpacing: 10,
-                          crossAxisSpacing: 10
-                        ), itemBuilder: (context,index){
-                    return  InkWell(
-                      onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>SecondPage()));
-                      },
-                      child: Container(
-                       margin: EdgeInsets.only(left: index%2==0?10:0 ,
-                       right: index%2==1?10:0),
-                          decoration: BoxDecoration(
-                         borderRadius: BorderRadius.circular(21),
-                              image: DecorationImage(
-                                fit: BoxFit.cover,
-                                  image: NetworkImage(widget.image[index]))
-                          ),
-
-                        ),
-                    );
-                    }),
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: widget.image.length,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                childAspectRatio: 16 / 9,
+                                mainAxisExtent: 130,
+                                mainAxisSpacing: 10,
+                                crossAxisSpacing: 10),
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => SecondPage()));
+                            },
+                            child: Container(
+                              margin: EdgeInsets.only(
+                                  left: index % 2 == 0 ? 10 : 0,
+                                  right: index % 2 == 1 ? 10 : 0),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(21),
+                                  image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image:
+                                          NetworkImage(widget.image[index]))),
+                            ),
+                          );
+                        }),
                   ),
                 ],
               )
-
-
-
             ]),
       ),
     );
